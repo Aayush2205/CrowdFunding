@@ -10,9 +10,11 @@ contract CrowdFunding is ERC20, AccessControl{
         uint balance;
         address user;
         bool eligibility;
+        uint time;
+        bool rewardCollected;
     }
 
-    address public owner;
+    address payable public owner;
     uint public deadline;
     uint public goal;
     uint public currentAmt;
@@ -24,6 +26,10 @@ contract CrowdFunding is ERC20, AccessControl{
         require(!isPaused,"Contract is Paused");
         _;
     }
+    modifier onlyOwner(){
+        require(msg.sender== owner, "Not the owner");
+        _;
+    }
     modifier afterDeadline(){
         require(block.timestamp>= deadline," Campaign is still active");
         _;
@@ -32,17 +38,22 @@ contract CrowdFunding is ERC20, AccessControl{
     event Contribution(address indexed contributor , uint value, uint timestamp);
     event ClaimReward(address indexed contributor, uint _reward, uint timestamp );
     event Withdrawal(address indexed contributor, uint value, uint timestamp);
+    event TranferFund(address indexed owner, uint value, uint timestamp);
 
     constructor(uint _goal, uint _duration)ERC20("FundToken", "FDT"){
-        owner = msg.sender;
+        owner = payable(msg.sender);
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
-        deadline= block.timestamp + _duration * 1 minutes;
+        deadline= block.timestamp + _duration * 1 days;
         goal= _goal;
     }
 
     function remainingTime() public view returns (uint){
         return deadline -  block.timestamp;
+    }
+
+    function totalSupply() public view override returns(uint){
+        return goal;
     }
 
     function deposit() public payable notPaused {
@@ -52,16 +63,19 @@ contract CrowdFunding is ERC20, AccessControl{
             contribution[msg.sender].user= msg.sender;
             contribution[msg.sender].balance+= msg.value;
             contribution[msg.sender].eligibility= true;
+            contribution[msg.sender].time = block.timestamp;
         } 
 
-        else if (currentAmt>=goal && block.timestamp< deadline){
+        else if (currentAmt>=goal ){
             goalReached= true;
             isPaused= true;
             contribution[msg.sender].user= msg.sender;
             uint bal= (msg.value-(currentAmt-goal));
             contribution[msg.sender].balance+= bal;
             payable(msg.sender).transfer(msg.value-bal);
+            currentAmt-=(msg.value-bal);
             contribution[msg.sender].eligibility= true;
+            contribution[msg.sender].time = block.timestamp;
         }
 
         emit Contribution(msg.sender, msg.value, block.timestamp);
@@ -70,10 +84,13 @@ contract CrowdFunding is ERC20, AccessControl{
 
     function rewardToPublic(address _to) public onlyRole(MINTER_ROLE){
         require(goalReached, "Goal Not Reached");
+        require( contribution[_to].time< deadline,"No rewards after deadline");
         require(contribution[_to].eligibility,"Not Eligible");
+        require(!contribution[_to].rewardCollected,"Reward already collected");
         uint balReward= ((contribution[_to].balance*10**decimals())/goal);
         _mint(_to, balReward);
         contribution[_to].eligibility= false;
+        contribution[_to].rewardCollected = true;
 
         emit ClaimReward(_to ,balReward , block.timestamp);
     }
@@ -89,6 +106,15 @@ contract CrowdFunding is ERC20, AccessControl{
 
             emit Withdrawal(msg.sender, balWithdraw, block.timestamp);
         }
+    }
+
+    function transferToAccount() public onlyOwner afterDeadline{
+        require(goalReached,"Goal Not Reached");
+        owner.transfer(address(this).balance);
+        uint transBal= currentAmt;
+        currentAmt=0;
+
+        emit TranferFund(owner, transBal, block.timestamp);
     }
 
 }
