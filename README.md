@@ -8,10 +8,8 @@ BNB Smart Chain Testnet
 ~~~
 0x539FAcAA4f382B4fC1Cab6f0B107a86aa177FcD0
 ~~~
-## Block Explorer-
-~~~
-BscScan
-~~~
+## Block Explorer Link-
+BscScan - [Live Preview](https://testnet.bscscan.com/tx/0x3417423ae0ff9d9398cbc3b5efdf3b5e21253aa7dd011b4c2b7b9356754ba6ad)
 
 ## Introduction-
 Crowdfunding is a way to raise funds for a specific cause or project by asking a large number of people to donate money, usually in small amounts, and usually during a relatively short period of time, such as a few months. Crowdfunding is done online, often with social networks, which make it easy for supporters to share a cause or project cause with their social networks.
