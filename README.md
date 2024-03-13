@@ -27,13 +27,13 @@ transferToAccount() - this is to tranfer the fund which is collected to the owne
 
 ### Modifiers
 
-onlyOwner() - only the owner of the contracted can access
-notPaused() - is used when we want to run a check on a function whether is it paused or not
-afterDeadline()- will run a function only when the deadline has been reached
+onlyOwner() - only the owner of the contracted can access  
+notPaused() - is used when we want to run a check on a function whether is it paused or not  
+afterDeadline()- will run a function only when the deadline has been reached  
 
 ### Events
 
-Contribution(address indexed contributor , uint value, uint timestamp)- Event for deposit
-ClaimReward(address indexed contributor, uint _reward, uint timestamp)- Event for rewardToPublic
-Withdrawal(address indexed contributor, uint value, uint timestamp)- Event for withdrawal
-TranferFund(address indexed owner, uint value, uint timestamp)- Event for tranferToAccount
+Contribution(address indexed contributor , uint value, uint timestamp)- Event for deposit  
+ClaimReward(address indexed contributor, uint _reward, uint timestamp)- Event for rewardToPublic  
+Withdrawal(address indexed contributor, uint value, uint timestamp)- Event for withdrawal  
+TranferFund(address indexed owner, uint value, uint timestamp)- Event for tranferToAccount  
