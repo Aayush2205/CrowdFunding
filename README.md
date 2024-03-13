@@ -20,10 +20,10 @@ Organizations, businesses, and individuals alike can use crowdfunding for any ty
 
 ### Funcions-
 
-deposit() - Used by the contributor to contribute for the fund.
-rewardToPublic() - Accessable only by the minter to mint tokens as a reward for the contributors who contributed before the deadline
-withdrawal() - If the goal is not fulfilled before the deadline then the contributors have an option to withdraw their contributions
-transferToAccount() - this is to tranfer the fund which is collected to the owner of the CrowdFund
+deposit() - Used by the contributor to contribute for the fund  
+rewardToPublic() - Accessable only by the minter to mint tokens as a reward for the contributors who contributed before the deadline  
+withdrawal() - If the goal is not fulfilled before the deadline then the contributors have an option to withdraw their contributions  
+transferToAccount() - this is to tranfer the fund which is collected to the owner of the CrowdFund  
 
 ### Modifiers
 
